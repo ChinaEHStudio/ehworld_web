@@ -1,17 +1,38 @@
+import React from "react";
 import { useEffect, useReducer, useState } from "react";
 import config from "../config/server";
 import style from "../styles/App.module.scss";
+import Button from "./Button";
+import Input from "./Input";
 
-function App() {
-  let [emailAddress, setEmail] = useState("");
-  let [password, setPassword] = useState("");
-  let [disabled, setDisabled] = useReducer(
+export type UserDataField = "email" | "password";
+export interface FormField {
+  name: string;
+  objName: UserDataField;
+  type: "text" | "password";
+}
+
+const App: React.FC = () => {
+  const [userData, setUserData] = useState({} as Record<UserDataField, string>);
+  const [disabled, setDisabled] = useReducer(
     (disabled: boolean) => !disabled,
     false
   );
+  const fields: FormField[] = [
+    {
+      name: "Email",
+      objName: "email",
+      type: "text",
+    },
+    {
+      name: "Password",
+      objName: "password",
+      type: "password",
+    },
+  ];
 
   useEffect(() => {
-    document.title = "Login - EHWorld"
+    document.title = "Login - EHWorld";
   }, []);
 
   const storeTryCount = () => {
@@ -28,6 +49,15 @@ function App() {
   const getTryCount = () =>
     Number(window.localStorage.getItem("tryCount")) ?? 0;
 
+  const handleFormInput = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: FormField
+  ) => {
+    const userDataCopy = userData;
+    userDataCopy[field.objName] = e.target.value;
+    setUserData(userDataCopy);
+  };
+
   const login = async () => {
     if (
       getTryCount() >= 3 &&
@@ -40,7 +70,7 @@ function App() {
     setDisabled();
     const response = await fetch(`${config.server.baseUrl}/account/log`, {
       method: "POST",
-      body: JSON.stringify({ email: emailAddress, pass: password }),
+      body: JSON.stringify({ email: userData.email, pass: userData.password }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -57,35 +87,21 @@ function App() {
       <main className={style.login}>
         <div className={style.loginForm}>
           <h1>Login</h1>
-          <p>
-            <input
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              value={emailAddress}
-              type="text"
-              name=""
-              id=""
-              placeholder="Email"
-              className={style.formInput}
+          {fields.map((field, index) => (
+            <Input
+              onChange={(e) => handleFormInput(e, field)}
+              value={userData[field.objName as UserDataField]}
+              type={field.type}
+              placeholder={field.name}
+              key={index}
             />
-          </p>
-          <p>
-            <input
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              value={password}
-              type="password"
-              placeholder="Password"
-              className={style.formInput}
-            />
-          </p>
-          <p>
-            <button disabled={disabled} onClick={login} className={style.submitButton}>
-              Login
-            </button>
-          </p>
+          ))}
+          <Button
+            disabled={disabled}
+            onClick={login}
+          >
+            Login
+          </Button>
         </div>
       </main>
     </div>

@@ -24,39 +24,5 @@
     transform: rotate(-12deg);
     background-color: $dark;
     padding: 4rem 5.5rem;
-
-    & .formInput {
-      border: solid transparent;
-      border-radius: 12px;
-      padding: 10px;
-      outline: transparent;
-      transition: 0.3s;
-      transform: scale(1);
-      background-color: $white;
-    }
-  
-    & .submitButton {
-      border: solid transparent;
-      border-radius: 12px;
-      padding: 10px;
-      outline: transparent;
-      transition: 0.3s;
-      transform: scale(1);
-      background-color: $white;
-
-      &:hover:not(:disabled) {
-        background-color: $primary;
-        transform: scale(1.2);
-        cursor: pointer;
-      }
-  
-      &:active:not(:disabled) {
-        background-color: $secondary;
-      }
-
-      &:disabled:hover {
-        cursor: not-allowed;
-      }
-    }
   }
 }
