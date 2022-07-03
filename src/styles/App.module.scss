@@ -1,0 +1,62 @@
+@import "./variables.scss";
+
+.loginContainer {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  background-color: $background;
+}
+
+.login {
+  padding: 4rem 5.5rem;
+  transform: rotate(12deg);
+  border-radius: 12%;
+  background-color: $primary;
+  font-size: 1.5rem;
+
+  & .loginForm {
+    border-radius: 10%;
+    color: $white;
+    transform: rotate(-12deg);
+    background-color: $dark;
+    padding: 4rem 5.5rem;
+
+    & .formInput {
+      border: solid transparent;
+      border-radius: 12px;
+      padding: 10px;
+      outline: transparent;
+      transition: 0.3s;
+      transform: scale(1);
+      background-color: $white;
+    }
+  
+    & .submitButton {
+      border: solid transparent;
+      border-radius: 12px;
+      padding: 10px;
+      outline: transparent;
+      transition: 0.3s;
+      transform: scale(1);
+      background-color: $white;
+
+      &:hover:not(:disabled) {
+        background-color: $primary;
+        transform: scale(1.2);
+        cursor: pointer;
+      }
+  
+      &:active:not(:disabled) {
+        background-color: $secondary;
+      }
+
+      &:disabled:hover {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
