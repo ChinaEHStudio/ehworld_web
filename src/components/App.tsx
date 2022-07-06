@@ -68,7 +68,10 @@ const App: React.FC = () => {
       return;
     }
     setDisabled();
-    const response = await fetch(`${config.server.baseUrl}/account/log`, {
+    let xhr = new XMLHttpRequest()
+    xhr.open("GET",`${config.server.baseUrl}/account/log`, false)
+    xhr.send()
+    /*const response = await fetch(`${config.server.baseUrl}/account/log`, {
       method: "POST",
       body: JSON.stringify({ email: userData.email, pass: userData.password }),
       headers: {
@@ -77,7 +80,8 @@ const App: React.FC = () => {
     });
     const rText = await response.text();
     // TODO: use custom alert instead
-    alert(rText);
+    alert(rText);*/
+    alert(xhr.responseText)
     setDisabled();
     storeTryCount();
   };
