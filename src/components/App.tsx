@@ -5,6 +5,9 @@ import style from "../styles/App.module.scss";
 import Button from "./Button";
 import Input from "./Input";
 
+import Swal from "sweetalert2";
+import "sweetalert2/src/sweetalert2.scss";
+
 export type UserDataField = "email" | "password";
 export interface FormField {
   name: string;
@@ -58,32 +61,47 @@ const App: React.FC = () => {
     setUserData(userDataCopy);
   };
 
-  const login = async () => {
+  const login = () => {
+    if (!userData.email) {
+      Swal.fire("请填入邮箱", "检测到您尚未输入邮箱，请输入后再试", "error");
+      return;
+    }
+    if (!userData.password) {
+      Swal.fire("请填入密码", "检测到您尚未输入密码，请输入后再试", "error");
+      return;
+    }
+    if (
+      !userData.email.match(
+        /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
+      )
+    ) {
+      Swal.fire(
+        "请输入正确的邮箱",
+        "检测到您输入的邮箱不是正确邮箱格式，请重新输入后再试",
+        "error"
+      );
+      return;
+    }
     if (
       getTryCount() >= 3 &&
       Date.now() - Number(window.localStorage.getItem("time")) <= 900000
     ) {
-      // TODO: use custom alert toaster instead
-      alert("您已尝试超过三次，请不要继续尝试");
+      Swal.fire(
+        "不要继续尝试了！",
+        "您已尝试超过三次，请不要继续尝试",
+        "error"
+      );
       return;
     }
     setDisabled();
-    let xhr = new XMLHttpRequest()
-    xhr.open("POST",`${config.server.baseUrl}/account/log`, false)
-    xhr.setRequestHeader('content-type', 'application/json');
-    xhr.send(JSON.stringify({ email: userData.email, pass: userData.password }));
-    xhr.send()
-    /*const response = await fetch(`${config.server.baseUrl}/account/log`, {
-      method: "POST",
-      body: JSON.stringify({ email: userData.email, pass: userData.password }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const rText = await response.text();
-    // TODO: use custom alert instead
-    alert(rText);*/
-    alert(xhr.responseText)
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", `${config.server.baseUrl}/account/log`, false);
+    xhr.setRequestHeader("content-type", "application/json");
+    xhr.send(
+      JSON.stringify({ email: userData.email, pass: userData.password })
+    );
+    xhr.send();
+    Swal.fire("Good job!", xhr.responseText, "success");
     setDisabled();
     storeTryCount();
   };
@@ -102,16 +120,13 @@ const App: React.FC = () => {
               key={index}
             />
           ))}
-          <Button
-            disabled={disabled}
-            onClick={login}
-          >
+          <Button disabled={disabled} onClick={login}>
             Login
           </Button>
         </div>
       </main>
     </div>
   );
-}
+};
 
 export default App;
