@@ -18,6 +18,7 @@
   border-radius: 12%;
   background-color: $primary;
   font-size: 1.5rem;
+  animation: spin infinite 20s linear;
 
   & .loginForm {
     border-radius: 10%;
@@ -25,5 +26,25 @@
     transform: rotate(-12deg);
     background-color: $dark;
     padding: 4rem 5.5rem;
+    animation: spin-r infinite 20s linear;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+@keyframes spin-r {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
   }
 }
