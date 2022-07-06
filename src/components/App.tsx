@@ -100,7 +100,6 @@ const App: React.FC = () => {
     xhr.send(
       JSON.stringify({ email: userData.email, pass: userData.password })
     );
-    xhr.send();
     Swal.fire("Good job!", xhr.responseText, "success");
     setDisabled();
     storeTryCount();
