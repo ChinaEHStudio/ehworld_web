@@ -69,7 +69,7 @@ const App: React.FC = () => {
     }
     setDisabled();
     let xhr = new XMLHttpRequest()
-    xhr.open("GET",`${config.server.baseUrl}/account/log`, false)
+    xhr.open("POST",`${config.server.baseUrl}/account/log`, false)
     xhr.send()
     /*const response = await fetch(`${config.server.baseUrl}/account/log`, {
       method: "POST",
