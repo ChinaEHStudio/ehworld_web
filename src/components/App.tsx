@@ -96,7 +96,7 @@ const App: React.FC = () => {
     setDisabled();
     let xhr = new XMLHttpRequest();
     xhr.open("POST", `${config.server.baseUrl}/account/log`, false);
-    xhr.setRequestHeader("content-type", "application/json");
+   // xhr.setRequestHeader("content-type", "application/json");
     xhr.send(
       JSON.stringify({ email: userData.email, pass: userData.password })
     );
