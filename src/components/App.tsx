@@ -1,9 +1,10 @@
 import React from "react";
 import { useEffect, useReducer, useState } from "react";
 import config from "../config/server";
-import style from "../styles/App.module.scss";
 import Button from "./Button";
 import Input from "./Input";
+import Container from "./Container";
+import { Link } from "react-router-dom";
 
 import Swal from "sweetalert2";
 import "sweetalert2/src/sweetalert2.scss";
@@ -71,9 +72,7 @@ const App: React.FC = () => {
       return;
     }
     if (
-      !userData.email.match(
-        /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
-      )
+      !userData.email.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)
     ) {
       Swal.fire(
         "请输入正确的邮箱",
@@ -96,7 +95,6 @@ const App: React.FC = () => {
     setDisabled();
     let xhr = new XMLHttpRequest();
     xhr.open("POST", `${config.server.baseUrl}/account/log`, false);
-   // xhr.setRequestHeader("content-type", "application/json");
     xhr.send(
       JSON.stringify({ email: userData.email, pass: userData.password })
     );
@@ -106,25 +104,23 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className={style.loginContainer}>
-      <main className={style.login}>
-        <div className={style.loginForm}>
-          <h1>Login</h1>
-          {fields.map((field, index) => (
-            <Input
-              onChange={(e) => handleFormInput(e, field)}
-              value={userData[field.objName as UserDataField]}
-              type={field.type}
-              placeholder={field.name}
-              key={index}
-            />
-          ))}
-          <Button disabled={disabled} onClick={login}>
-            Login
-          </Button>
-        </div>
-      </main>
-    </div>
+    <Container>
+      <h1>Login</h1>
+      {fields.map((field, index) => (
+        <Input
+          onChange={(e) => handleFormInput(e, field)}
+          value={userData[field.objName as UserDataField]}
+          type={field.type}
+          placeholder={field.name}
+          key={index}
+        />
+      ))}
+      <Button disabled={disabled} onClick={login}>
+        Login
+      </Button>
+      <hr style={{margin: "1.2rem"}} />
+      <p style={{fontSize: "15px"}}>没有账号？<Link to={"/reg"}>注册一个！</Link></p>
+    </Container>
   );
 };
 
