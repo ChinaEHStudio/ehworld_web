@@ -12,6 +12,35 @@ export default function () {
     [password, setPassword] = useState(""),
     [verifyNumber, setVn] = useState("");
 
+  const sendVN = () => {
+    if (!email.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
+      Swal.fire(
+        "请输入正确的邮箱",
+        "检测到您输入的邮箱不是正确邮箱格式，请重新输入后再试",
+        "error"
+      );
+      return;
+    }
+    fetch(`${config.server.baseUrl}/account/getvn?email=${email}`).catch(() =>
+      Swal.fire("发送失败", "请检查您的网络连接", "error")
+    );
+    Swal.fire("Good job!", "发送成功，请检查邮箱", "success");
+  };
+
+  const reg = async ([un, ea, pw, vn]: string[]) => {
+    let xhr = await fetch(`${config.server.baseUrl}/account/reg`, {
+      method: "POST",
+      body: JSON.stringify({
+        username: un,
+        pass: pw,
+        email: ea,
+        vernumber: vn,
+      }),
+    });
+
+    return await xhr.text();
+  };
+
   useEffect(() => {
     document.title = "Register - EHWorld";
   }, []);
@@ -43,41 +72,16 @@ export default function () {
         type={"text"}
         placeholder={"验证码"}
       />
-      <Button
-        style={{ marginRight: "30px" }}
-        onClick={() => {
-          if (!email.match(/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            Swal.fire(
-              "请输入正确的邮箱",
-              "检测到您输入的邮箱不是正确邮箱格式，请重新输入后再试",
-              "error"
-            );
-            return;
-          }
-          fetch(`${config.server.baseUrl}/account/getvn?email=${email}`)
-          .catch(
-            () => Swal.fire("发送失败", "请检查您的网络连接", "error")
-          );
-          Swal.fire("Good job!", "发送成功，请检查邮箱", "success");
-        }}
-      >
+      <Button style={{ marginRight: "30px" }} onClick={sendVN}>
         发送验证码
       </Button>
       <Button
-        onClick={() => {
-          fetch(`${config.server.baseUrl}/account/reg`, {
-            method: "POST",
-            body: JSON.stringify({
-              username: userName,
-              pass: password,
-              email: email,
-              vernumber: verifyNumber,
-            }),
-          })
-            .then((res) => res.text())
-            .then((res) => {
-              Swal.fire("Good job!", res, "success");
-            });
+        onClick={async () => {
+          Swal.fire(
+            "Good job!",
+            await reg([userName, email, password, verifyNumber]),
+            "success"
+          );
         }}
       >
         注册
